@@ -164,10 +164,7 @@ for image_path in images:
                     xmax = int(min(imW, (boxes[i][3] * imW)))
                     cropped_image = image[ymin:ymax, xmin:xmax]
 
-                    yymin = 0
-                    xxmin = 0 
-                    yymax = 320
-                    xxmax = 320
+
 
                     cropped_image_resized = cv2.resize(cropped_image, (320, 320))
 
@@ -178,6 +175,10 @@ for image_path in images:
                     print("Resized and cropped image captured and saved!")
 
                     # For Annotation
+                    ymin = 0
+                    xmin = 0 
+                    ymax = 320
+                    xmax = 320
                     annotation = ET.Element('annotation')
                     folder = ET.SubElement(annotation, 'folder')
                     folder.text = 'Face-Detected'
@@ -207,14 +208,14 @@ for image_path in images:
                     difficult = ET.SubElement(obj, 'difficult')
                     difficult.text = '0'
                     bndbox = ET.SubElement(obj, 'bndbox')
-                    xmin_elem = ET.SubElement(bndbox, 'xxmin')
-                    xmin_elem.text = str(xxmin)
-                    ymin_elem = ET.SubElement(bndbox, 'yymin')
-                    ymin_elem.text = str(yymin)
-                    xmax_elem = ET.SubElement(bndbox, 'xxmax')
-                    xmax_elem.text = str(xxmax)
-                    ymax_elem = ET.SubElement(bndbox, 'yymax')
-                    ymax_elem.text = str(yymax)
+                    xmin_elem = ET.SubElement(bndbox, 'xmin')
+                    xmin_elem.text = str(xmin)
+                    ymin_elem = ET.SubElement(bndbox, 'ymin')
+                    ymin_elem.text = str(ymin)
+                    xmax_elem = ET.SubElement(bndbox, 'xmax')
+                    xmax_elem.text = str(xmax)
+                    ymax_elem = ET.SubElement(bndbox, 'ymax')
+                    ymax_elem.text = str(ymax)
 
                     xml_filename = f"{object_name} ({leo_delen_counter}).xml"
                     xml_path = os.path.join(save_folder, xml_filename)
