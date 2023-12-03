@@ -176,7 +176,7 @@ for image_path in images:
                     image_path = os.path.join(save_folder, image_name)
                     cv2.imwrite(image_path, cropped_image_resized) 
                     print("Resized and cropped image captured and saved!")
-                    leo_delen_counter += 1
+
                     # For Annotation
                     annotation = ET.Element('annotation')
                     folder = ET.SubElement(annotation, 'folder')
@@ -208,13 +208,13 @@ for image_path in images:
                     difficult.text = '0'
                     bndbox = ET.SubElement(obj, 'bndbox')
                     xmin_elem = ET.SubElement(bndbox, 'xxmin')
-                    xmin_elem.text = str(xmin)
+                    xmin_elem.text = str(xxmin)
                     ymin_elem = ET.SubElement(bndbox, 'yymin')
-                    ymin_elem.text = str(ymin)
+                    ymin_elem.text = str(yymin)
                     xmax_elem = ET.SubElement(bndbox, 'xxmax')
-                    xmax_elem.text = str(xmax)
+                    xmax_elem.text = str(xxmax)
                     ymax_elem = ET.SubElement(bndbox, 'yymax')
-                    ymax_elem.text = str(ymax)
+                    ymax_elem.text = str(yymax)
 
                     xml_filename = f"{object_name} ({leo_delen_counter}).xml"
                     xml_path = os.path.join(save_folder, xml_filename)
