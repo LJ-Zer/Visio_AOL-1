@@ -1,6 +1,6 @@
 # Automation-of-Labelling-
 
-INITIAL PHASE
+## INITIAL PHASE
 
 1. Install Anaconda
 2. Create Virtual Environment
@@ -10,7 +10,7 @@ INITIAL PHASE
 4. Install Dependencies
 	- pip install tensorflow opencv-python protobuf==3.20.*
 
-INFERENCING PHASE
+## INFERENCING PHASE
 
 1. Activate the Environment
 	- conda activate automatic
