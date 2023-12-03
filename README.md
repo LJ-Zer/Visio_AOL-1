@@ -6,7 +6,7 @@
 2. Create Virtual Environment
 	- conda create --name automatic python=3.9
 3. Activate the Environment
-	conda activate automatic
+	- conda activate automatic
 4. Install Dependencies
 	- pip install tensorflow opencv-python protobuf==3.20.*
 
