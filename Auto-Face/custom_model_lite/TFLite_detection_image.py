@@ -174,7 +174,7 @@ for image_path in images:
                     cv2.imwrite(image_path, cropped_image_resized) 
                     print("Resized and cropped image captured and saved!")
 
-                    # For Annotation
+                    # For Annotations
                     ymin = 0
                     xmin = 0 
                     ymax = 320
