@@ -60,7 +60,7 @@ CWD_PATH = os.getcwd()
 
 # Define path to images and grab all image filenames
 PATH_TO_IMAGES = os.path.join(CWD_PATH, IM_DIR)
-images = glob.glob(PATH_TO_IMAGES + '/*.jpg') + glob.glob(PATH_TO_IMAGES + '/*.png') + glob.glob(PATH_TO_IMAGES + '/*.bmp')
+images = glob.glob(PATH_TO_IMAGES + '/*.jpg') + glob.glob(PATH_TO_IMAGES + '/*.png') + glob.glob(PATH_TO_IMAGES + '/*.bmp') + glob.glob(PATH_TO_IMAGES + '/*.JPEG')
 
 # Create results directory if the user wants to save results
 if save_results:
@@ -97,11 +97,32 @@ floating_model = (input_details[0]['dtype'] == np.float32)
 input_mean = 127.5
 input_std = 127.5
 
-save_folder = 'Face-Detected'
-if not os.path.exists(save_folder):
-    os.makedirs(save_folder)
+save_folder_Leo = 'Face-Detected-Leo'
+if not os.path.exists(save_folder_Leo):
+    os.makedirs(save_folder_Leo)
+
+save_folder_LJ = 'Face-Detected-LJ'
+if not os.path.exists(save_folder_LJ):
+    os.makedirs(save_folder_LJ)
+
+save_folder_Kiko = 'Face-Detected-Kiko'
+if not os.path.exists(save_folder_Kiko):
+    os.makedirs(save_folder_Kiko)
+
+save_folder_Queenie = 'Face-Detected-Queenie'
+if not os.path.exists(save_folder_Queenie):
+    os.makedirs(save_folder_Queenie)
+
+save_folder_Reu = 'Face-Detected-Reu'
+if not os.path.exists(save_folder_Reu):
+    os.makedirs(save_folder_Reu)
 
 leo_delen_counter = 0
+lord_john_perucho_counter = 0
+queenie_rose_amargo_counter = 0
+frank_lester_castillo_counter = 0 
+reu_pan_counter = 0 
+
 outname = output_details[0]['name']
 
 if 'StatefulPartitionedCall' in outname:  #
@@ -152,7 +173,6 @@ for image_path in images:
         classes = interpreter.get_tensor(output_details[classes_idx]['index'])[0]  # Class index of detected objects
         scores = interpreter.get_tensor(output_details[scores_idx]['index'])[0]  # Confidence of detected objects
 
-        # Loop over all detections and save cropped images and annotation files if the detected object is "Leo Delen"
         for i in range(len(scores)):
             if 0 <= int(classes[i]) < len(labels) and (scores[i] > min_conf_threshold) and (scores[i] <= 1.0):
                 object_name = labels[int(classes[i])]  # Look up object name from the "labels" array using the class index
@@ -164,13 +184,11 @@ for image_path in images:
                     xmax = int(min(imW, (boxes[i][3] * imW)))
                     cropped_image = image[ymin:ymax, xmin:xmax]
 
-
-
                     cropped_image_resized = cv2.resize(cropped_image, (320, 320))
 
                     # Save the resized cropped image
                     image_name = f"{object_name} ({leo_delen_counter}).jpg"
-                    image_path = os.path.join(save_folder, image_name)
+                    image_path = os.path.join(save_folder_Leo, image_name)
                     cv2.imwrite(image_path, cropped_image_resized) 
                     print("Resized and cropped image captured and saved!")
 
@@ -218,10 +236,271 @@ for image_path in images:
                     ymax_elem.text = str(ymax)
 
                     xml_filename = f"{object_name} ({leo_delen_counter}).xml"
-                    xml_path = os.path.join(save_folder, xml_filename)
+                    xml_path = os.path.join(save_folder_Leo, xml_filename)
                     tree = ET.ElementTree(annotation)
                     tree.write(xml_path)
                     leo_delen_counter += 1
+                    print("Annotation XML file saved!")
+
+
+                if object_name == "Lord John Perucho":
+                    ymin = int(max(1, (boxes[i][0] * imH)))
+                    xmin = int(max(1, (boxes[i][1] * imW)))
+                    ymax = int(min(imH, (boxes[i][2] * imH)))
+                    xmax = int(min(imW, (boxes[i][3] * imW)))
+                    cropped_image = image[ymin:ymax, xmin:xmax]
+
+                    cropped_image_resized = cv2.resize(cropped_image, (320, 320))
+
+                    # Save the resized cropped image
+                    image_name = f"{object_name} ({lord_john_perucho_counter}).jpg"
+                    image_path = os.path.join(save_folder_LJ, image_name)
+                    cv2.imwrite(image_path, cropped_image_resized) 
+                    print("Resized and cropped image captured and saved!")
+
+                    # For Annotations
+                    ymin = 0
+                    xmin = 0 
+                    ymax = 320
+                    xmax = 320
+                    annotation = ET.Element('annotation')
+                    folder = ET.SubElement(annotation, 'folder')
+                    folder.text = 'Face-Detected'
+                    filename = ET.SubElement(annotation, 'filename')
+                    filename.text = image_name
+                    path = ET.SubElement(annotation, 'path')
+                    path.text = os.path.abspath(image_path)
+                    source = ET.SubElement(annotation, 'source')
+                    database = ET.SubElement(source, 'database')
+                    database.text = 'Unknown'
+                    size = ET.SubElement(annotation, 'size')
+                    width_elem = ET.SubElement(size, 'width')
+                    width_elem.text = str(320)
+                    height_elem = ET.SubElement(size, 'height')
+                    height_elem.text = str(320)
+                    depth = ET.SubElement(size, 'depth')
+                    depth.text = str(3)
+                    segmented = ET.SubElement(annotation, 'segmented')
+                    segmented.text = '0'
+                    obj = ET.SubElement(annotation, 'object')
+                    name = ET.SubElement(obj, 'name')
+                    name.text = 'Lord John Perucho'
+                    pose = ET.SubElement(obj, 'pose')
+                    pose.text = 'Unspecified'
+                    truncated = ET.SubElement(obj, 'truncated')
+                    truncated.text = '1'
+                    difficult = ET.SubElement(obj, 'difficult')
+                    difficult.text = '0'
+                    bndbox = ET.SubElement(obj, 'bndbox')
+                    xmin_elem = ET.SubElement(bndbox, 'xmin')
+                    xmin_elem.text = str(xmin)
+                    ymin_elem = ET.SubElement(bndbox, 'ymin')
+                    ymin_elem.text = str(ymin)
+                    xmax_elem = ET.SubElement(bndbox, 'xmax')
+                    xmax_elem.text = str(xmax)
+                    ymax_elem = ET.SubElement(bndbox, 'ymax')
+                    ymax_elem.text = str(ymax)
+
+                    xml_filename = f"{object_name} ({lord_john_perucho_counter}).xml"
+                    xml_path = os.path.join(save_folder_LJ, xml_filename)
+                    tree = ET.ElementTree(annotation)
+                    tree.write(xml_path)
+                    lord_john_perucho_counter += 1
+                    print("Annotation XML file saved!")
+
+                if object_name == "Frank Lester castillo":
+                    ymin = int(max(1, (boxes[i][0] * imH)))
+                    xmin = int(max(1, (boxes[i][1] * imW)))
+                    ymax = int(min(imH, (boxes[i][2] * imH)))
+                    xmax = int(min(imW, (boxes[i][3] * imW)))
+                    cropped_image = image[ymin:ymax, xmin:xmax]
+
+                    cropped_image_resized = cv2.resize(cropped_image, (320, 320))
+
+                    # Save the resized cropped image
+                    image_name = f"{object_name} ({frank_lester_castillo_counter}).jpg"
+                    image_path = os.path.join(save_folder_Kiko, image_name)
+                    cv2.imwrite(image_path, cropped_image_resized) 
+                    print("Resized and cropped image captured and saved!")
+
+                    # For Annotations
+                    ymin = 0
+                    xmin = 0 
+                    ymax = 320
+                    xmax = 320
+                    annotation = ET.Element('annotation')
+                    folder = ET.SubElement(annotation, 'folder')
+                    folder.text = 'Face-Detected'
+                    filename = ET.SubElement(annotation, 'filename')
+                    filename.text = image_name
+                    path = ET.SubElement(annotation, 'path')
+                    path.text = os.path.abspath(image_path)
+                    source = ET.SubElement(annotation, 'source')
+                    database = ET.SubElement(source, 'database')
+                    database.text = 'Unknown'
+                    size = ET.SubElement(annotation, 'size')
+                    width_elem = ET.SubElement(size, 'width')
+                    width_elem.text = str(320)
+                    height_elem = ET.SubElement(size, 'height')
+                    height_elem.text = str(320)
+                    depth = ET.SubElement(size, 'depth')
+                    depth.text = str(3)
+                    segmented = ET.SubElement(annotation, 'segmented')
+                    segmented.text = '0'
+                    obj = ET.SubElement(annotation, 'object')
+                    name = ET.SubElement(obj, 'name')
+                    name.text = 'Frank Lester Castillo'
+                    pose = ET.SubElement(obj, 'pose')
+                    pose.text = 'Unspecified'
+                    truncated = ET.SubElement(obj, 'truncated')
+                    truncated.text = '1'
+                    difficult = ET.SubElement(obj, 'difficult')
+                    difficult.text = '0'
+                    bndbox = ET.SubElement(obj, 'bndbox')
+                    xmin_elem = ET.SubElement(bndbox, 'xmin')
+                    xmin_elem.text = str(xmin)
+                    ymin_elem = ET.SubElement(bndbox, 'ymin')
+                    ymin_elem.text = str(ymin)
+                    xmax_elem = ET.SubElement(bndbox, 'xmax')
+                    xmax_elem.text = str(xmax)
+                    ymax_elem = ET.SubElement(bndbox, 'ymax')
+                    ymax_elem.text = str(ymax)
+
+                    xml_filename = f"{object_name} ({frank_lester_castillo_counter}).xml"
+                    xml_path = os.path.join(save_folder_Kiko, xml_filename)
+                    tree = ET.ElementTree(annotation)
+                    tree.write(xml_path)
+                    frank_lester_castillo_counter += 1
+                    print("Annotation XML file saved!")
+
+                if object_name == "Queenie Rose Amargo":
+                    ymin = int(max(1, (boxes[i][0] * imH)))
+                    xmin = int(max(1, (boxes[i][1] * imW)))
+                    ymax = int(min(imH, (boxes[i][2] * imH)))
+                    xmax = int(min(imW, (boxes[i][3] * imW)))
+                    cropped_image = image[ymin:ymax, xmin:xmax]
+
+                    cropped_image_resized = cv2.resize(cropped_image, (320, 320))
+
+                    # Save the resized cropped image
+                    image_name = f"{object_name} ({queenie_rose_amargo_counter}).jpg"
+                    image_path = os.path.join(save_folder_Queenie, image_name)
+                    cv2.imwrite(image_path, cropped_image_resized) 
+                    print("Resized and cropped image captured and saved!")
+
+                    # For Annotations
+                    ymin = 0
+                    xmin = 0 
+                    ymax = 320
+                    xmax = 320
+                    annotation = ET.Element('annotation')
+                    folder = ET.SubElement(annotation, 'folder')
+                    folder.text = 'Face-Detected'
+                    filename = ET.SubElement(annotation, 'filename')
+                    filename.text = image_name
+                    path = ET.SubElement(annotation, 'path')
+                    path.text = os.path.abspath(image_path)
+                    source = ET.SubElement(annotation, 'source')
+                    database = ET.SubElement(source, 'database')
+                    database.text = 'Unknown'
+                    size = ET.SubElement(annotation, 'size')
+                    width_elem = ET.SubElement(size, 'width')
+                    width_elem.text = str(320)
+                    height_elem = ET.SubElement(size, 'height')
+                    height_elem.text = str(320)
+                    depth = ET.SubElement(size, 'depth')
+                    depth.text = str(3)
+                    segmented = ET.SubElement(annotation, 'segmented')
+                    segmented.text = '0'
+                    obj = ET.SubElement(annotation, 'object')
+                    name = ET.SubElement(obj, 'name')
+                    name.text = 'Queenie Rose Amargo'
+                    pose = ET.SubElement(obj, 'pose')
+                    pose.text = 'Unspecified'
+                    truncated = ET.SubElement(obj, 'truncated')
+                    truncated.text = '1'
+                    difficult = ET.SubElement(obj, 'difficult')
+                    difficult.text = '0'
+                    bndbox = ET.SubElement(obj, 'bndbox')
+                    xmin_elem = ET.SubElement(bndbox, 'xmin')
+                    xmin_elem.text = str(xmin)
+                    ymin_elem = ET.SubElement(bndbox, 'ymin')
+                    ymin_elem.text = str(ymin)
+                    xmax_elem = ET.SubElement(bndbox, 'xmax')
+                    xmax_elem.text = str(xmax)
+                    ymax_elem = ET.SubElement(bndbox, 'ymax')
+                    ymax_elem.text = str(ymax)
+
+                    xml_filename = f"{object_name} ({queenie_rose_amargo_counter}).xml"
+                    xml_path = os.path.join(save_folder_Queenie, xml_filename)
+                    tree = ET.ElementTree(annotation)
+                    tree.write(xml_path)
+                    queenie_rose_amargo_counter += 1
+                    print("Annotation XML file saved!")
+
+                if object_name == "Reu Pan":
+                    ymin = int(max(1, (boxes[i][0] * imH)))
+                    xmin = int(max(1, (boxes[i][1] * imW)))
+                    ymax = int(min(imH, (boxes[i][2] * imH)))
+                    xmax = int(min(imW, (boxes[i][3] * imW)))
+                    cropped_image = image[ymin:ymax, xmin:xmax]
+
+                    cropped_image_resized = cv2.resize(cropped_image, (320, 320))
+
+                    # Save the resized cropped image
+                    image_name = f"{object_name} ({reu_pan_counter}).jpg"
+                    image_path = os.path.join(save_folder_Reu, image_name)
+                    cv2.imwrite(image_path, cropped_image_resized) 
+                    print("Resized and cropped image captured and saved!")
+
+                    # For Annotations
+                    ymin = 0
+                    xmin = 0 
+                    ymax = 320
+                    xmax = 320
+                    annotation = ET.Element('annotation')
+                    folder = ET.SubElement(annotation, 'folder')
+                    folder.text = 'Face-Detected'
+                    filename = ET.SubElement(annotation, 'filename')
+                    filename.text = image_name
+                    path = ET.SubElement(annotation, 'path')
+                    path.text = os.path.abspath(image_path)
+                    source = ET.SubElement(annotation, 'source')
+                    database = ET.SubElement(source, 'database')
+                    database.text = 'Unknown'
+                    size = ET.SubElement(annotation, 'size')
+                    width_elem = ET.SubElement(size, 'width')
+                    width_elem.text = str(320)
+                    height_elem = ET.SubElement(size, 'height')
+                    height_elem.text = str(320)
+                    depth = ET.SubElement(size, 'depth')
+                    depth.text = str(3)
+                    segmented = ET.SubElement(annotation, 'segmented')
+                    segmented.text = '0'
+                    obj = ET.SubElement(annotation, 'object')
+                    name = ET.SubElement(obj, 'name')
+                    name.text = 'Reu Pan'
+                    pose = ET.SubElement(obj, 'pose')
+                    pose.text = 'Unspecified'
+                    truncated = ET.SubElement(obj, 'truncated')
+                    truncated.text = '1'
+                    difficult = ET.SubElement(obj, 'difficult')
+                    difficult.text = '0'
+                    bndbox = ET.SubElement(obj, 'bndbox')
+                    xmin_elem = ET.SubElement(bndbox, 'xmin')
+                    xmin_elem.text = str(xmin)
+                    ymin_elem = ET.SubElement(bndbox, 'ymin')
+                    ymin_elem.text = str(ymin)
+                    xmax_elem = ET.SubElement(bndbox, 'xmax')
+                    xmax_elem.text = str(xmax)
+                    ymax_elem = ET.SubElement(bndbox, 'ymax')
+                    ymax_elem.text = str(ymax)
+
+                    xml_filename = f"{object_name} ({reu_pan_counter}).xml"
+                    xml_path = os.path.join(save_folder_Reu, xml_filename)
+                    tree = ET.ElementTree(annotation)
+                    tree.write(xml_path)
+                    reu_pan_counter += 1
                     print("Annotation XML file saved!")
 
     if show_results:
