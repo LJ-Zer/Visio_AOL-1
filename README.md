@@ -15,6 +15,7 @@
 1. Activate the Environment
 	- conda activate automatic
 2. Run the Python
+   * Run the script in Auto-Face directory. Make sure to change the imagedir.
 	- python custom_model_lite/TFLite_detection_image.py --imagedir "path/of/your/images" --modeldir=custom_model_lite
 
 Credit to all of the owners of the default Python Scripts. This is used for educational purposes. 
